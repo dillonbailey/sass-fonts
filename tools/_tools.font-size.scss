@@ -1,5 +1,5 @@
 // ==========================================================================||
-//  Mixin Sugar for setting @include inuit-font-size 
+//  Mixin Sugar for setting @include inuit-font-size
 // ==========================================================================||
 //  Changelog
 //  2.0.2 - created
@@ -8,6 +8,13 @@
 // ==========================================================================||
 
 @use "sass:math";
+
+@function stripUnit($value) {
+  @return $value / ($value * 0 + 1);
+}
+@function rem($pxValue, $html-font-size) {
+  @return #{stripUnit($pxValue) / stripUnit($html-font-size)}rem;
+}
 
 @mixin sf-font-size($font-size, $line-height: 1, $letter-spacing: 0px, $important: false) {
   $impt: false;
@@ -28,7 +35,7 @@
   @if (type-of($font-size) == number and unit($font-size) == "px") {
     // Provides a 'px' fallback for old IEs not supporting 'rem' values
     font-size: $font-size $important;
-    font-size: math.div($font-size, $sf-global-font-size) * 1rem $important;
+    font-size: rem($font-size, $sf-global-font-size) $important;
   } @else {
     @error "font-size value is invalid. Must be a integer pixel.";
   }
